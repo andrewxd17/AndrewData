@@ -357,6 +357,9 @@
             background-color: #34495e;
         }
 
+        /* Prevent browser red outlines from native validation */
+        input:invalid, textarea:invalid { box-shadow: none; outline: none; }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             header {
@@ -500,6 +503,7 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -520,8 +524,14 @@
         </div>
     </div>
 </header>
+    <!-- Responsive nav toggle (visible on small screens) -->
+    <button id="navToggleBtn" class="nav-toggle" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
 
-<nav>
+<nav id="mainNav" role="navigation">
     <a href="#about">About</a> |
     <a href="#education">Education</a> |
     <a href="#skills">Skills</a> |
@@ -619,17 +629,19 @@
     <section id="contact">
         <h2>Get In Touch</h2>
         <p>Feel free to reach out to me for any suggestions and correction</p>
-        <form id="contactForm" style="margin-top: 1.5em;">
+        <form id="contactForm" style="margin-top: 1.5em;" novalidate>
             <label for="name">Name:</label>
-            <input type="text" id="name" required>
+            <input type="text" id="name">
 
             <label for="email">Email:</label>
-            <input type="email" id="email" required>
+            <input type="email" id="email">
 
             <label for="message">Message:</label>
-            <textarea id="message" rows="5" required></textarea>
+            <textarea id="message" rows="5"></textarea>
 
-            <input type="submit" value="Send Message">
+            <button type="submit" class="btn btn-primary">Send Message</button>
+
+            <div id="formMessage" role="status" aria-live="polite" style="margin-top:0.8em;color:#333;font-weight:600;display:none"></div>
         </form>
     </section>
 
@@ -654,11 +666,70 @@
         }
     }
 
-    // Simple JavaScript for form submission alert
-    document.getElementById("contactForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        alert("Thank you for contacting me! Your message has been received.");
-    });
+    // Responsive navigation toggle
+    (function() {
+        const navBtn = document.getElementById('navToggleBtn');
+        const nav = document.getElementById('mainNav');
+        if (!navBtn || !nav) return;
+
+        function setExpanded(exp) {
+            navBtn.setAttribute('aria-expanded', exp ? 'true' : 'false');
+            if (exp) {
+                nav.classList.add('open');
+                navBtn.classList.add('open');
+            } else {
+                nav.classList.remove('open');
+                navBtn.classList.remove('open');
+            }
+        }
+
+        navBtn.addEventListener('click', function() {
+            const isOpen = nav.classList.contains('open');
+            setExpanded(!isOpen);
+        });
+
+        // keyboard support
+        navBtn.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navBtn.click(); }
+        });
+
+        // close nav when clicking a link (mobile behavior)
+        nav.addEventListener('click', function(e) {
+            if (e.target && e.target.tagName === 'A' && window.innerWidth <= 768) {
+                setExpanded(false);
+            }
+        });
+    })();
+
+    // Custom form validation to avoid native red outlines
+    (function() {
+        const form = document.getElementById('contactForm');
+        const formMessage = document.getElementById('formMessage');
+        if (!form) return;
+
+        function showMessage(text) {
+            formMessage.textContent = text;
+            formMessage.style.display = 'block';
+        }
+        function clearMessage() { formMessage.textContent = ''; formMessage.style.display = 'none'; }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearMessage();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (!name) { showMessage('Please enter your name.'); document.getElementById('name').focus(); return; }
+            const emailRe = /^\S+@\S+\.\S+$/;
+            if (!email || !emailRe.test(email)) { showMessage('Please enter a valid email address.'); document.getElementById('email').focus(); return; }
+            if (!message) { showMessage('Please enter your message.'); document.getElementById('message').focus(); return; }
+
+            showMessage('Thank you — your message has been received.');
+            form.reset();
+        });
+    })();
 </script>
 
 </body>

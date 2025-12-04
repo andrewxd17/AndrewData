@@ -1,0 +1,106 @@
+/* Reusable button styles (responsive + accessible) */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.8rem 1.2rem;
+	font-size: 1rem;
+	line-height: 1;
+	border-radius: 6px;
+	border: 1px solid transparent;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background-color 0.18s ease, transform 0.08s ease, box-shadow 0.12s ease;
+	user-select: none;
+}
+
+.btn:focus {
+	outline: 3px solid rgba(44,62,80,0.12);
+	outline-offset: 2px;
+}
+
+/* Primary variant */
+.btn-primary {
+	background-color: #2c3e50;
+	color: #fff;
+	border-color: #1a252f;
+}
+.btn-primary:hover { background-color: #34495e; }
+.btn-primary:active { transform: translateY(1px); }
+
+/* Secondary / subtle */
+.btn-ghost {
+	background: transparent;
+	color: #2c3e50;
+	border-color: #dfe6e9;
+}
+
+/* Utility: full-width on small screens */
+@media (max-width: 480px) {
+	.btn { width: 100%; padding: 0.9rem 1rem; font-size: 0.98rem; }
+}
+
+/* Utility: make buttons larger and easier to tap on touch devices */
+@media (hover: none) and (pointer: coarse) {
+	.btn { padding: 1rem 1.2rem; font-size: 1.02rem; }
+}
+
+/* Small modifier */
+.btn-sm { padding: 0.45rem 0.7rem; font-size: 0.9rem; border-radius: 5px; }
+
+/* Block utility (force full width) */
+.btn-block { display: inline-flex; width: 100%; }
+
+/* Make sure inputs and buttons align with the site's form styles */
+form .btn { max-width: 300px; }
+
+/* Navigation menu toggle (hamburger) */
+.nav-toggle {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 38px;
+	padding: 0.25rem;
+	background: #ecf0f1;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	cursor: pointer;
+}
+.nav-toggle:focus { outline: 3px solid rgba(44,62,80,0.12); outline-offset: 2px; }
+.nav-toggle .bar {
+	display: block;
+	width: 18px;
+	height: 2px;
+	background: #2c3e50;
+	margin: 3px 0;
+	transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+/* When nav is open, change hamburger to X */
+.nav-toggle.open .bar:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+.nav-toggle.open .bar:nth-child(2) { opacity: 0; }
+.nav-toggle.open .bar:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+
+/* Responsive nav behavior */
+@media (max-width: 768px) {
+	/* show hamburger */
+	.nav-toggle { display: inline-flex; }
+
+	/* hide default nav and make it a vertical block when open */
+	#mainNav {
+		display: none;
+		width: 100%;
+		background: #ecf0f1;
+		padding: 0.6rem 1rem;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+	}
+
+	#mainNav.open {
+		display: block;
+	}
+
+	#mainNav a { display: block; padding: 0.5rem 0; margin: 0; }
+}
+
