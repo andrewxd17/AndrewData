@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andrew C. Tutor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Basic Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #2c3e50;
+            padding: 1em 2em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2em;
+        }
+
+        .header-intro h1 {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 0.2em;
+            color: #2c3e50;
+        }
+
+        .header-intro p {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 0.5em;
+        }
+
+        .header-intro .tagline {
+            font-size: 0.95em;
+            color: #999;
+            font-style: italic;
+        }
+
+        .header-content {
+            max-height: 150px;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .header-content.collapsed {
+            max-height: 0;
+        }
+
+        .toggle-header {
+            position: absolute;
+            top: 1.5em;
+            right: 2em;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            border: 1px solid #ccc;
+            padding: 0.5em 1em;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: normal;
+            font-size: 0.9em;
+            z-index: 10;
+        }
+
+        .toggle-header:hover {
+            background-color: #e8e8e8;
+        }
+
+        .hero-section {
+            display: flex;
+            gap: 1.5em;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .hero-image img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+
+        .hero-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2em;
+            margin-top: 3em;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 2em auto;
+            padding: 0 2em;
+        }
+
+        section {
+            margin-bottom: 2em;
+            background-color: white;
+            padding: 1.5em;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-top: 3px solid #2c3e50;
+        }
+
+        section h2 {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin-bottom: 1em;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.5em;
+        }
+
+        section h3 {
+            color: #333;
+            font-size: 1.2em;
+            margin-top: 1em;
+            margin-bottom: 0.8em;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5em;
+            margin-top: 1em;
+        }
+
+        .portfolio-item {
+            background: #f9f9f9;
+            padding: 1.5em;
+            border-left: 4px solid #2c3e50;
+            border-radius: 3px;
+        }
+
+        .portfolio-item h4 {
+            color: #2c3e50;
+            font-size: 1.1em;
+            margin-bottom: 0.5em;
+        }
+
+        .portfolio-item .date {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 0.5em;
+        }
+
+        .portfolio-item p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1em;
+            margin-top: 1em;
+        }
+
+        .skill-badge {
+            background: #ecf0f1;
+            padding: 1em;
+            text-align: center;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #ecf0f1;
+            padding: 0.8em 1em;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            margin: 0 0.8em;
+            font-weight: normal;
+            font-size: 0.9em;
+            display: inline-block;
+            padding: 0.5em 0;
+            white-space: nowrap;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+            color: #34495e;
+        }
+
+        /* Personal Info Section */
+        .personal-info {
+            display: flex;
+            gap: 2.5em;
+            align-items: flex-start;
+        }
+
+        .personal-info img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border: 2px solid #ddd;
+        }
+
+        .personal-info-table {
+            width: 100%;
+            border-collapse: collapse;
+            flex: 1;
+        }
+
+        .personal-info-table tr {
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .personal-info-table th {
+            color: #2c3e50;
+            font-weight: bold;
+            text-align: left;
+            padding: 0.8em 0.5em;
+            width: 30%;
+            background-color: #ecf0f1;
+        }
+
+        .personal-info-table td {
+            padding: 1em 0.5em;
+            color: #555;
+        }
+
+        /* Education Section */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1em;
+        }
+
+        table th, table td {
+            padding: 1.2em;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        table th {
+            background-color: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Skills & Lists */
+        ul, ol {
+            margin-left: 2em;
+            margin-top: 0.8em;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.8em;
+            color: #555;
+            font-weight: 500;
+        }
+
+        ul li:before {
+            content: "\2022 ";
+            color: #2c3e50;
+            font-weight: bold;
+            margin-right: 0.5em;
+        }
+
+        /* Contact Form */
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+        }
+
+        label {
+            margin-bottom: 0.5em;
+            color: #333;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            padding: 1em;
+            margin-bottom: 1.5em;
+            border: 2px solid #ecf0f1;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2c3e50;
+            box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+        }
+
+        button, input[type="submit"] {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1em 2em;
+            border: 1px solid #1a252f;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: normal;
+            width: 100%;
+            max-width: 300px;
+            min-height: 48px;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: #34495e;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.8em 1em;
+            }
+
+            .header-intro h1 {
+                font-size: 1.5em;
+                margin-bottom: 0.1em;
+            }
+
+            .header-intro p {
+                font-size: 0.95em;
+            }
+
+            .hero-section {
+                gap: 1em;
+            }
+
+            .hero-image img {
+                width: 110px;
+                height: 110px;
+            }
+
+            nav {
+                padding: 0.6em 0.5em;
+            }
+
+            nav a {
+                margin: 0 0.5em;
+                font-size: 0.8em;
+            }
+
+            main {
+                padding: 0 1em;
+                margin: 1em auto;
+            }
+
+            section {
+                padding: 1em;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+                gap: 1em;
+            }
+
+            .portfolio-item {
+                padding: 1em;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8em;
+            }
+
+            .skill-badge {
+                padding: 0.8em;
+                font-size: 0.9em;
+            }
+
+            .personal-info {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .personal-info img {
+                margin-bottom: 1.5em;
+            }
+
+            table th, table td {
+                padding: 0.8em;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+
+            header {
+                padding: 0.6em 0.8em;
+            }
+
+            .header-intro h1 {
+                font-size: 1.3em;
+            }
+
+            .header-intro p {
+                font-size: 0.9em;
+            }
+
+            .hero-image img {
+                width: 100px;
+                height: 100px;
+            }
+
+            nav a {
+                display: block;
+                margin: 0.3em 0;
+                padding: 0.6em 0;
+            }
+
+            section {
+                padding: 0.8em;
+                margin-bottom: 1em;
+            }
+
+            section h2 {
+                font-size: 1.3em;
+                margin-bottom: 0.8em;
+            }
+
+            section h3 {
+                font-size: 1.1em;
+                margin-top: 0.8em;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+                gap: 0.6em;
+            }
+
+            .skill-badge {
+                padding: 0.6em;
+                font-size: 0.85em;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            table th, table td {
+                padding: 0.6em;
+            }
+
+            button, input[type="submit"] {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+
+    <div class="header-content">
+        <div class="hero-section">
+            <div class="hero-image">
+                <img src="img_ko.jpg" alt="Andrew C. Tutor Profile Picture">
+            </div>
+            <div class="hero-content">
+                <div class="header-intro">
+                    <h1>Andrew C. Tutor</h1>
+                    <p>Computer Science Student</p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<nav>
+    <a href="#about">About</a> |
+    <a href="#education">Education</a> |
+    <a href="#skills">Skills</a> |
+    <a href="#training">Training</a> |
+    <a href="#contact">Contact</a>
+</nav>
+
+<main>
+
+    <!-- Personal Info -->
+    <section id="about">
+        <h2>About Me</h2>
+        <p>Hello! I'm Andrew C. Tutor, 25 years old from Candijay, Bohol. I am currently a first-year Computer Science student while also working as a government employee. My dream is to build a bright future and become successful in my chosen field.</p>
+        <div class="portfolio-grid" style="margin-top: 1.5em;">
+            <div class="portfolio-item">
+                <h4>📍 Location</h4>
+                <p>Purok 1, La Union, Candijay, Bohol</p>
+            </div>
+            <div class="portfolio-item">
+                <h4>📞 Contact</h4>
+                <p>(+63) 927 568 2132</p>
+            </div>
+            <div class="portfolio-item">
+                <h4>🎂 Birthday</h4>
+                <p>March 17, 2000 (Age 25)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education -->
+    <section id="education">
+        <h2>Education</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <h4>🎓 Elementary School</h4>
+                <p class="date">2006 - 2014</p>
+                <p><strong>La Union Elementary School</strong></p>
+            </div>
+            <div class="portfolio-item">
+                <h4>🎓 High School</h4>
+                <p class="date">2014 - 2020</p>
+                <p><strong>St. Joseph Academy</strong></p>
+            </div>
+            <div class="portfolio-item">
+                <h4>🎓 College</h4>
+                <p class="date">2025 - Present</p>
+                <p><strong>Bohol Island State University Candijay Campus</strong><br>Bachelor of Science and Computer Science</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills & Hobbies -->
+    <section id="skills">
+        <h2>Skills & Interests</h2>
+        
+        <h3>Technical & Professional Skills</h3>
+        <div class="skills-grid">
+            <div class="skill-badge">💻 Coding</div>
+            <div class="skill-badge">🔷 JavaScript</div>
+            <div class="skill-badge">👨‍💼 Government Work</div>
+            <div class="skill-badge">🍳 Cooking</div>
+        </div>
+
+        <h3 style="margin-top: 1.5em;">Certifications</h3>
+        <div class="skills-grid">
+            <div class="skill-badge">🥖 Bread & Pastry Production NCII (2024)</div>
+        </div>
+
+        <h3 style="margin-top: 1.5em;">Hobbies & Interests</h3>
+        <div class="skills-grid">
+            <div class="skill-badge">✈️ Traveling</div>
+            <div class="skill-badge">📚 Reading Comics & Manga</div>
+            <div class="skill-badge">🎮 Online Games</div>
+        </div>
+    </section>
+
+    <!-- Training -->
+    <section id="training">
+        <h2>Training & Development</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <h4>🎓 Bread and Pastry Production NCII</h4>
+                <p class="date">2024</p>
+                <p>Completed professional culinary training and certification</p>
+            </div>
+            <div class="portfolio-item">
+                <h4>💼 Work Ethics Seminar</h4>
+                <p class="date">2024</p>
+                <p>The Value of Customer Loyalty & Work Ethics</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <h2>Get In Touch</h2>
+        <p>Feel free to reach out to me for any suggestions and correction</p>
+        <form id="contactForm" style="margin-top: 1.5em;">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" rows="5" required></textarea>
+
+            <input type="submit" value="Send Message">
+        </form>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; 2025 Andrew C. Tutor | Computer Science Student</p>
+</footer>
+
+<script>
+    // Toggle Header Minimize/Expand
+    function toggleHeader() {
+        const headerContent = document.querySelector('.header-content');
+        const toggleBtn = document.querySelector('.toggle-header');
+        
+        headerContent.classList.toggle('collapsed');
+        
+        if (headerContent.classList.contains('collapsed')) {
+            toggleBtn.textContent = '+ Expand';
+        } else {
+            toggleBtn.textContent = '− Minimize';
+        }
+    }
+
+    // Simple JavaScript for form submission alert
+    document.getElementById("contactForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        alert("Thank you for contacting me! Your message has been received.");
+    });
+</script>
+
+</body>
+</html>

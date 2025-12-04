@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andrew C. Tutor</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #ffffff;
+            color: #2c3e50;
+            padding: 1em 2em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header-content {
+            max-height: 150px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+        }
+
+        .header-content.collapsed {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .toggle-header {
+            position: absolute;
+            top: 1.5em;
+            right: 2em;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            border: 1px solid #ccc;
+            padding: 0.5em 1em;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9em;
+            z-index: 10;
+            line-height: 1;
+        }
+
+        .toggle-header:hover {
+            background-color: #e8e8e8;
+        }
+
+        .hero-section {
+            display: flex;
+            gap: 1.5em;
+            align-items: center;
+        }
+
+        .hero-image img {
+            width: 140px;
+            height: 140px;
+            max-width: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: block;
+        }
+
+        .hero-text h1 { font-size: 1.8em; margin-bottom: 0.2em; color: #2c3e50; }
+        .hero-text p { color: #666; margin: 0; }
+
+        /* Prevent browser red outlines from native validation */
+        input:invalid, textarea:invalid { box-shadow: none; outline: none; }
+
+        nav {
+            background-color: #ecf0f1;
+            padding: 0.8em 1em;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: #2c3e50;
+            text-decoration: none;
+            margin: 0 0.8em;
+            font-size: 0.9em;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 2em auto;
+            padding: 0 2em;
+        }
+
+        section {
+            margin-bottom: 2em;
+            background: #fff;
+            padding: 1.5em;
+            border-radius: 4px;
+            border-top: 3px solid #2c3e50;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5em;
+            margin-top: 1em;
+        }
+
+        .portfolio-item {
+            background: #f9f9f9;
+            padding: 1.5em;
+            border-left: 4px solid #2c3e50;
+            border-radius: 3px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1em;
+        }
+
+        .skill-badge {
+            background: #ecf0f1;
+            padding: 1em;
+            text-align: center;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+        }
+
+        input, textarea {
+            padding: 1em;
+            margin-bottom: 1.5em;
+            border-radius: 6px;
+            border: 2px solid #ecf0f1;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background: #2c3e50;
+            color: white;
+            cursor: pointer;
+            border: 1px solid #1a252f;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2em;
+            margin-top: 3em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 0.8em 1em;
+            }
+
+            /* Stack hero on tablets and phones */
+            .hero-section {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8em;
+            }
+
+            .hero-image img {
+                width: 110px;
+                height: 110px;
+            }
+
+            /* Move toggle button to flow (avoid overlap) */
+            .toggle-header {
+                position: static;
+                margin-bottom: 0.6em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav a {
+                display: block;
+                margin: 0.3em 0;
+            }
+
+            body { font-size: 15px; }
+
+            .toggle-header { width: 100%; text-align: center; }
+
+            input, textarea { font-size: 15px; padding: 0.9em; }
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+
+    <!-- ▼ FIXED: Added Toggle Button -->
+    <button id="toggleHeaderBtn" class="toggle-header" aria-controls="headerContent" aria-expanded="true">− Minimize</button>
+
+    <div id="headerContent" class="header-content" role="region" aria-hidden="false">
+        <div class="hero-section">
+            <div class="hero-image">
+                <img src="img_ko.jpg" alt="Andrew C. Tutor Profile Picture">
+            </div>
+            <div class="hero-text">
+                <h1>Andrew C. Tutor</h1>
+                <p>Computer Science Student</p>
+            </div>
+        </div>
+    </div>
+</header>
+
+<nav>
+    <a href="#about">About</a> |
+    <a href="#education">Education</a> |
+    <a href="#skills">Skills</a> |
+    <a href="#training">Training</a> |
+    <a href="#contact">Contact</a>
+</nav>
+
+<main>
+
+    <!-- About -->
+    <section id="about">
+        <h2>About Me</h2>
+        <p>Hello! I'm Andrew C. Tutor, 25 years old from Candijay, Bohol...</p>
+
+        <div class="portfolio-grid">
+            <div class="portfolio-item"><h4>📍 Location</h4><p>Purok 1, La Union, Candijay</p></div>
+            <div class="portfolio-item"><h4>📞 Contact</h4><p>(+63) 927 568 2132</p></div>
+            <div class="portfolio-item"><h4>🎂 Birthday</h4><p>March 17, 2000</p></div>
+        </div>
+    </section>
+
+    <!-- Education -->
+    <section id="education">
+        <h2>Education</h2>
+
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <h4>Elementary</h4>
+                <p class="date">2006–2014</p>
+                <p>La Union Elementary School</p>
+            </div>
+
+            <div class="portfolio-item">
+                <h4>High School</h4>
+                <p class="date">2014–2020</p>
+                <p>St. Joseph Academy</p>
+            </div>
+
+            <div class="portfolio-item">
+                <h4>College</h4>
+                <p class="date">2025–Present</p>
+                <p>BISU Candijay Campus | BSCS</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+        <h2>Skills & Interests</h2>
+
+        <h3>Skills</h3>
+        <div class="skills-grid">
+            <div class="skill-badge">💻 Coding</div>
+            <div class="skill-badge">🔷 JavaScript</div>
+            <div class="skill-badge">👨‍💼 Government Work</div>
+            <div class="skill-badge">🍳 Cooking</div>
+        </div>
+
+        <h3>Certifications</h3>
+        <div class="skills-grid">
+            <div class="skill-badge">🥖 Bread & Pastry NCII (2024)</div>
+        </div>
+
+        <h3>Hobbies</h3>
+        <div class="skills-grid">
+            <div class="skill-badge">✈️ Traveling</div>
+            <div class="skill-badge">📚 Comics & Manga</div>
+            <div class="skill-badge">🎮 Gaming</div>
+        </div>
+    </section>
+
+    <!-- Training -->
+    <section id="training">
+        <h2>Training & Development</h2>
+
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <h4>NCII: Bread & Pastry</h4>
+                <p class="date">2024</p>
+            </div>
+
+            <div class="portfolio-item">
+                <h4>Work Ethics Seminar</h4>
+                <p class="date">2024</p>
+                <p>The Value of Customer Loyalty & Ethics</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <h2>Get In Touch</h2>
+        <p>Feel free to reach out for suggestions or corrections.</p>
+
+        <form id="contactForm" novalidate>
+            <input type="text" id="name" placeholder="Name">
+            <input type="email" id="email" placeholder="Email">
+            <textarea id="message" rows="5" placeholder="Your message..."></textarea>
+            <input type="submit" value="Send Message">
+            <div id="formMessage" role="status" aria-live="polite" style="margin-top:0.6em;display:none;color:#333;font-weight:600"></div>
+        </form>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; 2025 Andrew C. Tutor | Computer Science Student</p>
+</footer>
+
+<script>
+    (function() {
+        // Header toggle: accessible + persistent
+        const btn = document.getElementById('toggleHeaderBtn');
+        const content = document.getElementById('headerContent');
+        const STORAGE_KEY = 'headerCollapsed_v1';
+
+        if (btn && content) {
+            // restore state
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved === 'true') {
+                content.classList.add('collapsed');
+                content.setAttribute('aria-hidden', 'true');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.textContent = '+ Expand';
+            } else {
+                content.classList.remove('collapsed');
+                content.setAttribute('aria-hidden', 'false');
+                btn.setAttribute('aria-expanded', 'true');
+                btn.textContent = '− Minimize';
+            }
+
+            function toggleHeader() {
+                const isCollapsed = content.classList.toggle('collapsed');
+                content.setAttribute('aria-hidden', isCollapsed ? 'true' : 'false');
+                btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+                btn.textContent = isCollapsed ? '+ Expand' : '− Minimize';
+                try { localStorage.setItem(STORAGE_KEY, isCollapsed ? 'true' : 'false'); } catch (e) {}
+            }
+
+            btn.addEventListener('click', toggleHeader);
+            btn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleHeader(); }
+            });
+        }
+
+        // Custom form validation (neutral messages, no red browser outline)
+        const form = document.getElementById('contactForm');
+        const formMessage = document.getElementById('formMessage');
+        if (form) {
+            function showMessage(text) {
+                formMessage.textContent = text;
+                formMessage.style.display = 'block';
+            }
+            function clearMessage() { formMessage.textContent = ''; formMessage.style.display = 'none'; }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                clearMessage();
+
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const message = document.getElementById('message').value.trim();
+
+                if (!name) { showMessage('Please enter your name.'); document.getElementById('name').focus(); return; }
+                const emailRe = /^\S+@\S+\.\S+$/;
+                if (!email || !emailRe.test(email)) { showMessage('Please enter a valid email address.'); document.getElementById('email').focus(); return; }
+                if (!message) { showMessage('Please enter your message.'); document.getElementById('message').focus(); return; }
+
+                // simulate successful submit
+                showMessage('Thank you — your message has been received.');
+                form.reset();
+            });
+        }
+    })();
+</script>
+
+</body>
+</html>
