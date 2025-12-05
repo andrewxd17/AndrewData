@@ -1,0 +1,14 @@
+{
+  "name": "andrewdata",
+  "version": "1.0.0",
+  "description": "Static portfolio site for Andrew C. Tutor (served with Express for LAN preview)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "andrewxd17",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
